@@ -1,0 +1,22 @@
+---
+services:
+  meal-planner:
+    build: .
+    ports:
+      - 3000:3000
+    develop:
+      watch:
+        - action: rebuild
+          path: ./pkg
+        - action: rebuild
+          path: ./cmd
+        - action: sync
+          path: ./static
+          target: /root/static
+        - action: rebuild
+          path: ./docker-compose.yml
+        - action: rebuild
+          path: ./Dockerfile
+    environment:
+      PORT: 3000
+      SQLITE_DB_FILE: /root/meal-planner.db
