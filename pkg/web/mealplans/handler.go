@@ -83,7 +83,7 @@ func (h *Handler) CreateMealPlan(w http.ResponseWriter, r *http.Request) {
 
 	mealFromDB := models.Meal{}
 	log.Println("Searching for Meal: ", meal)
-	boot.DB.Where("name = ?", meal).First(&mealFromDB)
+	boot.DB.Where("lower(name) = lower(?)", meal).First(&mealFromDB)
 	if mealFromDB.ID == 0 {
 		log.Println("Creating new meal: ", meal)
 		mealFromDB = models.Meal{Name: meal}
