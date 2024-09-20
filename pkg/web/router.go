@@ -3,6 +3,7 @@ package web
 import (
 	"net/http"
 
+	"github.com/J4yTr1n1ty/meal-planner/pkg/web/authentication"
 	"github.com/J4yTr1n1ty/meal-planner/pkg/web/familymembers"
 	"github.com/J4yTr1n1ty/meal-planner/pkg/web/homepage"
 	"github.com/J4yTr1n1ty/meal-planner/pkg/web/mealplans"
@@ -18,6 +19,10 @@ func SetupRoutes() *http.ServeMux {
 	homepageHandler := homepage.NewHandler()
 	mux.HandleFunc("GET /", homepageHandler.Homepage)
 	mux.HandleFunc("GET /addmeal", homepageHandler.AddMealPage)
+
+	authenticationHandler := authentication.NewHandler()
+	mux.HandleFunc("GET /login", authenticationHandler.Login)
+	mux.HandleFunc("POST /login", authenticationHandler.LoginPost)
 
 	mealPlanHandler := mealplans.NewHandler()
 	mux.HandleFunc("GET /mealplans", mealPlanHandler.GetMealPlans)
