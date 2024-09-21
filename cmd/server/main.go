@@ -30,7 +30,7 @@ func main() {
 
 	router := web.SetupRoutes()
 
-	stack := middleware.CreateStack(middleware.Logging, middleware.Session)
+	stack := middleware.CreateStack(middleware.Logging, middleware.Session, middleware.Recovery)
 
 	server := http.Server{
 		Addr:    ":" + boot.Environment.GetEnv("PORT"),

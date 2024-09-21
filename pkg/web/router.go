@@ -8,6 +8,7 @@ import (
 	"github.com/J4yTr1n1ty/meal-planner/pkg/web/homepage"
 	"github.com/J4yTr1n1ty/meal-planner/pkg/web/mealplans"
 	"github.com/J4yTr1n1ty/meal-planner/pkg/web/meals"
+	"github.com/J4yTr1n1ty/meal-planner/pkg/web/middleware"
 )
 
 func SetupRoutes() *http.ServeMux {
@@ -17,23 +18,23 @@ func SetupRoutes() *http.ServeMux {
 	mux.Handle("GET /static/", http.StripPrefix("/static/", fs))
 
 	homepageHandler := homepage.NewHandler()
-	mux.HandleFunc("GET /", homepageHandler.Homepage)
-	mux.HandleFunc("GET /addmeal", homepageHandler.AddMealPage)
+	mux.Handle("GET /", middleware.LoginRequired(homepageHandler.Homepage()))
+	mux.Handle("GET /addmeal", middleware.LoginRequired(homepageHandler.AddMealPage()))
 
 	authenticationHandler := authentication.NewHandler()
-	mux.HandleFunc("GET /login", authenticationHandler.Login)
-	mux.HandleFunc("POST /login", authenticationHandler.LoginPost)
+	mux.Handle("GET /login", authenticationHandler.Login())
+	mux.Handle("POST /login", authenticationHandler.LoginPost())
 
 	mealPlanHandler := mealplans.NewHandler()
-	mux.HandleFunc("GET /mealplans", mealPlanHandler.GetMealPlans)
-	mux.HandleFunc("POST /mealplans", mealPlanHandler.CreateMealPlan)
-	mux.HandleFunc("DELETE /mealplans/{id}", mealPlanHandler.DeleteMealPlan)
+	mux.Handle("GET /mealplans", middleware.LoginRequired(mealPlanHandler.GetMealPlans()))
+	mux.Handle("POST /mealplans", middleware.LoginRequired(mealPlanHandler.CreateMealPlan()))
+	mux.Handle("DELETE /mealplans/{id}", middleware.LoginRequired(mealPlanHandler.DeleteMealPlan()))
 
 	mealHandler := meals.NewHandler()
-	mux.HandleFunc("GET /meals", mealHandler.GetMeals)
+	mux.Handle("GET /meals", middleware.LoginRequired(mealHandler.GetMeals()))
 
 	familyMemberHandler := familymembers.NewHandler()
-	mux.HandleFunc("GET /familymembers", familyMemberHandler.GetFamilyMembers)
+	mux.Handle("GET /familymembers", middleware.LoginRequired(familyMemberHandler.GetFamilyMembers()))
 
 	return mux
 }
