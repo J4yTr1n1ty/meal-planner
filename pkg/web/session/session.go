@@ -39,7 +39,6 @@ func LoadOrNew(r *http.Request) *Session {
 
 	sessionId, err := r.Cookie(config.SessionCookieName)
 	if err != nil {
-		log.Println("session.LoadOrNew: cookie error, new session: ", err)
 		return session
 	}
 

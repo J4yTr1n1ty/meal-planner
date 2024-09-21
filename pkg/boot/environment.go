@@ -11,7 +11,10 @@ import (
 var Environment EnvHandler = EnvHandler{
 	requiredEnvVars: []string{
 		"PORT",
-		"SQLITE_DB_FILE",
+		"POSTGRES_HOST",
+		"POSTGRES_PORT",
+		"POSTGRES_USER",
+		"POSTGRES_DB",
 		"REDIS_ADDR",
 	},
 }

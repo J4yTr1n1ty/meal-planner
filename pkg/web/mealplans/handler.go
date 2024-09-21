@@ -31,7 +31,7 @@ func GetMealPlanData() ([]models.MealPlan, []htmx.MealTableData) {
 
 	tableData := []htmx.MealTableData{}
 
-	for _, mealplan := range mealplans {
+	for _, mealplan := range filtered_mealplans {
 		tableData = append(tableData, htmx.MealTableData{
 			ID:           mealplan.ID,
 			RelativeTime: mealplan.GetDaysFromNow(),

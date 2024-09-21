@@ -1,11 +1,11 @@
 package boot
 
 import (
+	"fmt"
 	"log"
-	"os"
 	"time"
 
-	"gorm.io/driver/sqlite"
+	"gorm.io/driver/postgres"
 	"gorm.io/gorm"
 )
 
@@ -16,12 +16,14 @@ func ConnectDB() {
 	log.Println("Connecting to database...")
 	start := time.Now()
 
-	uri := os.Getenv("SQLITE_DB_FILE")
-	if uri == "" {
-		log.Fatal("DATABASE_URI environment variable not set")
-	}
+	host := Environment.GetEnv("POSTGRES_HOST")
+	port := Environment.GetEnv("POSTGRES_PORT")
+	user := Environment.GetEnv("POSTGRES_USER")
+	db := Environment.GetEnv("POSTGRES_DB")
 
-	DB, err = gorm.Open(sqlite.Open(uri), &gorm.Config{})
+	uri := fmt.Sprintf("host=%s port=%s user=%s dbname=%s sslmode=disable", host, port, user, db)
+
+	DB, err = gorm.Open(postgres.Open(uri), &gorm.Config{})
 	if err != nil {
 		log.Fatal("Error connecting to database: ", err)
 	}

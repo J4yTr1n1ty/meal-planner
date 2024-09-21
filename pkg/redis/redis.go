@@ -5,7 +5,6 @@ import (
 	"context"
 	"encoding/json"
 	"fmt"
-	"log"
 	"strconv"
 	"strings"
 	"time"
@@ -54,8 +53,6 @@ func Set(key string, v interface{}, expire time.Duration) error {
 		return err
 	}
 
-	log.Println(fmt.Sprintf("redis.Set(%s): %s", key, string(bin)))
-
 	_, err = Client.Set(ctx, key, bin, expire).Result()
 	if err != nil {
 		return err
@@ -71,7 +68,6 @@ func Get(key string, v any) error {
 		return err
 	}
 
-	log.Println(fmt.Sprintf("redis.Get(%s): %s", key, val))
 	return json.Unmarshal([]byte(val), v)
 }
 
@@ -82,7 +78,6 @@ func Exists(key string) bool {
 		return false
 	}
 
-	log.Println(fmt.Sprintf("redis.Exists(%s): %d", key, val))
 	return val == 1
 }
 
