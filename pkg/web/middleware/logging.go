@@ -27,6 +27,11 @@ func Logging(next http.Handler) http.Handler {
 
 		next.ServeHTTP(wrapped, r)
 
-		log.Println(r.RemoteAddr, wrapped.statusCode, r.Method, r.URL.Path, time.Since(start))
+		remoteip := r.Header.Get("X-Forwarded-For")
+		if remoteip == "" {
+			remoteip = r.RemoteAddr
+		}
+
+		log.Println(remoteip, wrapped.statusCode, r.Method, r.URL.Path, time.Since(start))
 	})
 }
