@@ -10,7 +10,7 @@ const (
 	SessionKey            = "sessionId"
 	SessionExpire         = 5 * time.Hour
 	SessionCookieName     = "session_id"
-	SessionCookieMaxAge   = 5 * 60
+	SessionCookieMaxAge   = 5 * 60 * 60
 	SessionRedisKeyFormat = "session/%s"
 
 	Password = "4912Essen"
