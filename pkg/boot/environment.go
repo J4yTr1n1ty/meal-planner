@@ -12,6 +12,7 @@ var Environment EnvHandler = EnvHandler{
 	requiredEnvVars: []string{
 		"PORT",
 		"SQLITE_DB_FILE",
+		"REDIS_ADDR",
 	},
 }
 

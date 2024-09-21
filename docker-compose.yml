@@ -2,6 +2,8 @@
 services:
   meal-planner:
     build: .
+    depends_on:
+      - redis
     restart: unless-stopped
     ports:
       - 3000:3000
@@ -21,3 +23,19 @@ services:
     environment:
       PORT: 3000
       SQLITE_DB_FILE: /root/meal-planner.db
+      REDIS_ADDR: redis:6379
+
+  redis:
+    image: redis:alpine
+    restart: unless-stopped
+    environment:
+      - ALLOW_EMPTY_PASSWORD=yes
+    healthcheck:
+      test: ["CMD", "redis-cli", "--raw", "incr", "ping"]
+    ports:
+      - 6379
+    volumes:
+      - redis-data:/data
+
+volumes:
+  redis-data:
