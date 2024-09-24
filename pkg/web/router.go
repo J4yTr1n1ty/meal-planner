@@ -15,11 +15,12 @@ func SetupRoutes() *http.ServeMux {
 	mux := http.NewServeMux()
 
 	fs := http.FileServer(http.Dir("static"))
-	mux.Handle("GET /static/", http.StripPrefix("/static/", fs))
+	mux.Handle("GET /static/", middleware.LoginRequired(http.StripPrefix("/static/", fs)))
 
 	homepageHandler := homepage.NewHandler()
 	mux.Handle("GET /", middleware.LoginRequired(homepageHandler.Homepage()))
 	mux.Handle("GET /addmeal", middleware.LoginRequired(homepageHandler.AddMealPage()))
+	mux.Handle("GET /editmeal/{id}", middleware.LoginRequired(homepageHandler.EditMealPage()))
 
 	authenticationHandler := authentication.NewHandler()
 	mux.Handle("GET /login", authenticationHandler.Login())
@@ -28,6 +29,7 @@ func SetupRoutes() *http.ServeMux {
 	mealPlanHandler := mealplans.NewHandler()
 	mux.Handle("GET /mealplans", middleware.LoginRequired(mealPlanHandler.GetMealPlans()))
 	mux.Handle("POST /mealplans", middleware.LoginRequired(mealPlanHandler.CreateMealPlan()))
+	mux.Handle("PUT /mealplans/{id}", middleware.LoginRequired(mealPlanHandler.UpdateMealPlan()))
 	mux.Handle("DELETE /mealplans/{id}", middleware.LoginRequired(mealPlanHandler.DeleteMealPlan()))
 
 	mealHandler := meals.NewHandler()

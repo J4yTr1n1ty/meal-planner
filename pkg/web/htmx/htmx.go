@@ -64,7 +64,7 @@ var MealTableTemplate = `
   </thead>
   <tbody>
     {{ range . }}
-    <tr hx-delete="/mealplans/{{ .ID }}" hx-target="#mealplans" hx-confirm="Are you sure you want to delete this meal plan?">
+    <tr onclick="window.location='/editmeal/{{ .ID }}'" class="mealplanentry">
       <td>{{ .RelativeTime }} ({{ .Date.Format "02.Jan.2006" }})</td>
       <td>{{ .Name }}</td>
       <td>{{ .Meal }}</td>
@@ -152,6 +152,11 @@ func RenderMealTable(w http.ResponseWriter, data []MealTableData) error {
 	w.Write([]byte(value))
 
 	return nil
+}
+
+func Redirect(w http.ResponseWriter, r *http.Request, path string) {
+	w.Header().Set("HX-Redirect", path)
+	w.WriteHeader(http.StatusFound)
 }
 
 func renderTemplate(templateStr string, data interface{}) (string, error) {

@@ -1,6 +1,10 @@
 package config
 
-import "time"
+import (
+	"time"
+
+	"github.com/J4yTr1n1ty/meal-planner/pkg/boot"
+)
 
 const (
 	EnvPort         = "PORT"
@@ -15,3 +19,7 @@ const (
 
 	Password = "4912Essen"
 )
+
+func IsDebug() bool {
+	return boot.Environment.GetEnvBool("DEBUG")
+}

@@ -22,6 +22,7 @@ services:
         - action: rebuild
           path: ./Dockerfile
     environment:
+      DEBUG: true
       PORT: 3000
       POSTGRES_HOST: postgres
       POSTGRES_PORT: 5432

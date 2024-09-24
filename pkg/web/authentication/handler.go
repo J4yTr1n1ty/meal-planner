@@ -37,8 +37,7 @@ func (h *Handler) LoginPost() http.HandlerFunc {
 		password := r.Form.Get("password")
 		if password == config.Password {
 			session.LoginUser(w, r)
-			w.Header().Set("HX-Redirect", "/")
-			w.WriteHeader(http.StatusOK)
+			htmx.Redirect(w, r, "/")
 			return
 		} else {
 			htmx.RenderError(w, http.StatusOK, "Wrong password")
