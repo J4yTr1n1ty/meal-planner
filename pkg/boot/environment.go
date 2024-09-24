@@ -10,6 +10,7 @@ import (
 
 var Environment EnvHandler = EnvHandler{
 	requiredEnvVars: []string{
+		"DEBUG",
 		"PORT",
 		"POSTGRES_HOST",
 		"POSTGRES_PORT",
