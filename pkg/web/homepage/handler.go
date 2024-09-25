@@ -24,6 +24,12 @@ type EditData struct {
 	Date         time.Time
 }
 
+func (h *Handler) Favicon() http.HandlerFunc {
+	return func(w http.ResponseWriter, r *http.Request) {
+		http.ServeFile(w, r, "static/favicon.ico")
+	}
+}
+
 func (h *Handler) Homepage() http.HandlerFunc {
 	return func(w http.ResponseWriter, r *http.Request) {
 		w.Header().Set("Cache-Control", "no-store, no-cache, must-revalidate, post-check=0, pre-check=0")

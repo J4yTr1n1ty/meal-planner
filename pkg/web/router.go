@@ -18,6 +18,7 @@ func SetupRoutes() *http.ServeMux {
 	mux.Handle("GET /static/", middleware.LoginRequired(http.StripPrefix("/static/", fs)))
 
 	homepageHandler := homepage.NewHandler()
+	mux.Handle("GET /favicon.ico", homepageHandler.Favicon())
 	mux.Handle("GET /", middleware.LoginRequired(homepageHandler.Homepage()))
 	mux.Handle("GET /addmeal", middleware.LoginRequired(homepageHandler.AddMealPage()))
 	mux.Handle("GET /editmeal/{id}", middleware.LoginRequired(homepageHandler.EditMealPage()))
