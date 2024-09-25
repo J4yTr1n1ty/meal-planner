@@ -1,10 +1,12 @@
 package homepage
 
 import (
+	"log"
 	"net/http"
 	"time"
 
 	"github.com/J4yTr1n1ty/meal-planner/pkg/boot"
+	"github.com/J4yTr1n1ty/meal-planner/pkg/config"
 	"github.com/J4yTr1n1ty/meal-planner/pkg/models"
 	"github.com/J4yTr1n1ty/meal-planner/pkg/web/templates"
 )
@@ -51,11 +53,19 @@ func (h *Handler) EditMealPage() http.HandlerFunc {
 			http.Error(w, "Unable to retrive MealPlan from Database", http.StatusBadRequest)
 		}
 
+		if result.RowsAffected == 0 {
+			http.Error(w, "Unable to retrive MealPlan from Database", http.StatusBadRequest)
+		}
+
 		editData := EditData{
 			ID:           mealPlan.ID,
 			FamilyMember: mealPlan.FamilyMember.Name,
 			Meal:         mealPlan.Meal.Name,
 			Date:         mealPlan.Date,
+		}
+
+		if config.IsDebug() {
+			log.Println("EditData: ", editData)
 		}
 
 		editTemplate := templates.NewTemplate()
