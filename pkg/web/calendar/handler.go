@@ -28,7 +28,6 @@ func (h *Handler) CalendarPage() http.HandlerFunc {
 func (h *Handler) GetCalendarData() http.HandlerFunc {
 	return func(w http.ResponseWriter, r *http.Request) {
 		now := time.Now()
-		currentMonth := time.Date(now.Year(), now.Month(), 1, 0, 0, 0, 0, now.Location())
 
 		monthParam := r.URL.Query().Get("month")
 		var firstOfMonth time.Time
@@ -40,7 +39,7 @@ func (h *Handler) GetCalendarData() http.HandlerFunc {
 			}
 			firstOfMonth = time.Date(parsed.Year(), parsed.Month(), 1, 0, 0, 0, 0, now.Location())
 		} else {
-			firstOfMonth = currentMonth
+			firstOfMonth = time.Date(now.Year(), now.Month(), 1, 0, 0, 0, 0, now.Location())
 		}
 
 		firstOfNext := firstOfMonth.AddDate(0, 1, 0)
@@ -100,13 +99,7 @@ func (h *Handler) GetCalendarData() http.HandlerFunc {
 		}
 
 		prevMonth := firstOfMonth.AddDate(0, -1, 0).Format("2006-01")
-		var nextMonth string
-		if firstOfMonth.Before(currentMonth) || firstOfMonth.Equal(currentMonth) {
-			// Only show next if we're not already at the current month
-			if firstOfMonth.Before(currentMonth) {
-				nextMonth = firstOfNext.Format("2006-01")
-			}
-		}
+		nextMonth := firstOfNext.Format("2006-01")
 
 		data := htmx.CalendarData{
 			MonthName: fmt.Sprintf("%s %d", firstOfMonth.Month().String(), firstOfMonth.Year()),
