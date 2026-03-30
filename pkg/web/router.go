@@ -4,11 +4,13 @@ import (
 	"net/http"
 
 	"github.com/J4yTr1n1ty/meal-planner/pkg/web/authentication"
+	"github.com/J4yTr1n1ty/meal-planner/pkg/web/calendar"
 	"github.com/J4yTr1n1ty/meal-planner/pkg/web/familymembers"
 	"github.com/J4yTr1n1ty/meal-planner/pkg/web/homepage"
 	"github.com/J4yTr1n1ty/meal-planner/pkg/web/mealplans"
 	"github.com/J4yTr1n1ty/meal-planner/pkg/web/meals"
 	"github.com/J4yTr1n1ty/meal-planner/pkg/web/middleware"
+	"github.com/J4yTr1n1ty/meal-planner/pkg/web/suggestions"
 )
 
 func SetupRoutes() *http.ServeMux {
@@ -38,6 +40,13 @@ func SetupRoutes() *http.ServeMux {
 
 	familyMemberHandler := familymembers.NewHandler()
 	mux.Handle("GET /familymembers", middleware.LoginRequired(familyMemberHandler.GetFamilyMembers()))
+
+	suggestionsHandler := suggestions.NewHandler()
+	mux.Handle("GET /suggestions", middleware.LoginRequired(suggestionsHandler.GetSuggestions()))
+
+	calendarHandler := calendar.NewHandler()
+	mux.Handle("GET /calendar", middleware.LoginRequired(calendarHandler.CalendarPage()))
+	mux.Handle("GET /calendardata", middleware.LoginRequired(calendarHandler.GetCalendarData()))
 
 	return mux
 }

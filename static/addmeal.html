@@ -14,7 +14,10 @@
 <body>
   <div class="container text-center">
     <h1>Add Meal Plan</h1>
-    <a href="/"><button type="button" class="btn btn-primary">Back</button></a>
+    <div class="d-flex justify-content-center gap-2 mb-3">
+      <a href="/"><button type="button" class="btn btn-primary">Back</button></a>
+      <button type="button" class="btn btn-outline-secondary" onclick="suggestMeal()">Suggest a meal</button>
+    </div>
 
     <form class="mx-auto mb-3" hx-post="/mealplans">
       <div class="form-group">
@@ -50,6 +53,16 @@
       },
       false,
     );
+
+    function suggestMeal() {
+      fetch('/suggestions')
+        .then(r => r.text())
+        .then(name => {
+          if (name.trim()) {
+            document.getElementById('meal').value = name.trim();
+          }
+        });
+    }
   </script>
 </footer>
 

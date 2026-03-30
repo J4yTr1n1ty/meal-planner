@@ -74,6 +74,67 @@ var MealTableTemplate = `
 </table>
 `
 
+type CalendarMeal struct {
+	Meal         string
+	FamilyMember string
+}
+
+type CalendarDay struct {
+	DayNum int // 0 = padding cell
+	Date   time.Time
+	Meals  []CalendarMeal
+}
+
+type CalendarData struct {
+	MonthName string        // e.g. "March 2026"
+	PrevMonth string        // e.g. "2026-02"
+	NextMonth string        // e.g. "2026-04", empty string if current month
+	Weeks     [][]CalendarDay // rows of 7 days, Mon–Sun
+}
+
+var CalendarTemplate = `
+<div id="calendar-grid" class="mt-3">
+  <div class="d-flex justify-content-between align-items-center mb-2">
+    <button class="btn btn-outline-secondary btn-sm"
+            hx-get="/calendardata?month={{ .PrevMonth }}"
+            hx-target="#calendar-grid" hx-swap="outerHTML">← Prev</button>
+    <strong>{{ .MonthName }}</strong>
+    {{ if .NextMonth }}
+    <button class="btn btn-outline-secondary btn-sm"
+            hx-get="/calendardata?month={{ .NextMonth }}"
+            hx-target="#calendar-grid" hx-swap="outerHTML">Next →</button>
+    {{ else }}
+    <span class="btn btn-outline-secondary btn-sm disabled">Next →</span>
+    {{ end }}
+  </div>
+  <div class="calendar-month">
+    <div class="calendar-header d-flex text-center fw-bold mb-1">
+      <div style="width:calc(100%/7);flex:0 0 calc(100%/7)">Mon</div>
+      <div style="width:calc(100%/7);flex:0 0 calc(100%/7)">Tue</div>
+      <div style="width:calc(100%/7);flex:0 0 calc(100%/7)">Wed</div>
+      <div style="width:calc(100%/7);flex:0 0 calc(100%/7)">Thu</div>
+      <div style="width:calc(100%/7);flex:0 0 calc(100%/7)">Fri</div>
+      <div style="width:calc(100%/7);flex:0 0 calc(100%/7)">Sat</div>
+      <div style="width:calc(100%/7);flex:0 0 calc(100%/7)">Sun</div>
+    </div>
+    {{ range .Weeks }}
+    <div class="calendar-week d-flex">
+      {{ range . }}
+      <div class="calendar-cell border p-1 overflow-hidden" style="width:calc(100%/7);flex:0 0 calc(100%/7);min-height:80px">
+        {{ if .DayNum }}<small class="text-muted">{{ .DayNum }}</small>{{ end }}
+        {{ range .Meals }}
+        <div class="badge bg-success text-wrap w-100 mb-1" style="font-size:0.7rem">
+          {{ .Meal }}<br><small>{{ .FamilyMember }}</small>
+        </div>
+        {{ end }}
+      </div>
+      {{ end }}
+    </div>
+    {{ end }}
+  </div>
+</div>
+`
+
 func RenderError(w http.ResponseWriter, httpStatus int, message string) error {
 	w.WriteHeader(httpStatus)
 
@@ -151,6 +212,19 @@ func RenderMealTable(w http.ResponseWriter, data []MealTableData) error {
 
 	w.Write([]byte(value))
 
+	return nil
+}
+
+func RenderCalendar(w http.ResponseWriter, data CalendarData) error {
+	w.Header().Set("Content-Type", "text/html")
+	w.WriteHeader(http.StatusOK)
+
+	value, err := renderTemplate(CalendarTemplate, data)
+	if err != nil {
+		return fmt.Errorf("%w: %v", ErrExecutingTemplate, err)
+	}
+
+	w.Write([]byte(value))
 	return nil
 }
 

@@ -32,7 +32,9 @@ func (m *MealPlan) GetDaysFromNow() string {
 		return "Tomorrow"
 	case days > 1:
 		return fmt.Sprintf("In %d days", days)
+	case days == -1:
+		return "Yesterday"
 	default:
-		return "Invalid date"
+		return fmt.Sprintf("%d days ago", -days)
 	}
 }
